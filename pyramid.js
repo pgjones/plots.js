@@ -9,7 +9,7 @@ var plots = plots || {};
 ///  options: Associate array of optional settings, including:
 ///    width: Optional plot width, defaults to 300px
 ///    height: Optional plot height, defaults to 400px
-plots.Pyramid = function(data, options) {
+plots.Pyramid = function(data, options, canvas) {
   options = options || {};
   this._settings = {
     width: options.width || 400,
@@ -32,7 +32,7 @@ plots.Pyramid = function(data, options) {
   this._settings.label_width = this._settings.axis_size * longest_label / 2;
   this._settings.bar_height = (this._settings.height - 2 * this._settings.axis_size) / this._data.length;
   // Create the canvas and draw the plot
-  this.canvas = document.createElement("canvas");
+  this.canvas = canvas || document.createElement("canvas");
   this.canvas.width = this._settings.width;
   this.canvas.height = this._settings.height;
   this.context = this.canvas.getContext("2d");
