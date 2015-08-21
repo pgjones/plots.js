@@ -7,8 +7,9 @@ var plots = plots || {};
 ///  data: A list of groups in the following format (example values)
 ///        [{'group': '0-20', 'male': 20, 'female': 10}]
 ///  options: Associate array of optional settings, including:
-///    width: Optional plot width, defaults to 300px
-///    height: Optional plot height, defaults to 400px
+///    width: Plot width, defaults to 300px
+///    height: Plot height, defaults to 400px
+///    margin: Margin between any part of the plot and the edge, and within the plot
 plots.Pyramid = function(data, options, canvas) {
   options = options || {};
   this._settings = {
@@ -30,7 +31,7 @@ plots.Pyramid = function(data, options, canvas) {
   }
   this._settings.max_value = max_value;
   this._settings.label_width = this._settings.axis_size * longest_label / 2;
-  this._settings.bar_height = (this._settings.height - 2 * this._settings.axis_size) / this._data.length;
+  this._settings.bar_height = (this._settings.height - this._settings.axis_size) / this._data.length;
   // Create the canvas and draw the plot
   this.canvas = canvas || document.createElement("canvas");
   this.canvas.width = this._settings.width;
@@ -51,11 +52,11 @@ plots.Pyramid.prototype._draw_axis = function() {
   // The vertical axis
   this.context.beginPath();
   this.context.moveTo((this._settings.width - this._settings.label_width) / 2 - this._settings.margin,
-                      this._settings.axis_size);
+                      this._settings.margin);
   this.context.lineTo((this._settings.width - this._settings.label_width) / 2 - this._settings.margin,
                       this._settings.height - this._settings.axis_size);
   this.context.moveTo((this._settings.width + this._settings.label_width) / 2 + this._settings.margin,
-                      this._settings.axis_size);
+                      this._settings.margin);
   this.context.lineTo((this._settings.width + this._settings.label_width) / 2 + this._settings.margin,
                       this._settings.height - this._settings.axis_size);
   this.context.stroke();
