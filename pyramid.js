@@ -11,16 +11,10 @@ var plots = plots || {};
 ///    height: Plot height, defaults to 400px
 ///    margin: Margin between any part of the plot and the edge, and within the plot
 plots.Pyramid = function(data, options, canvas) {
+  plots.Plot.call(this, options, canvas);
   options = options || {};
-  this._settings = {
-    width: options.width || 400,
-    height: options.height || 300,
-    axis_size: options.axis_size || 20,
-    male_color: options.male_color || "darkblue",
-    female_color: options.female_color || "magenta",
-    margin: options.margin || 2,
-    axis_thickness: options.axis_thickness || 2,
-  };
+  this._settings.male_color = options.male_color || "darkblue";
+  this._settings.female_color = options.female_color || "magenta";
   this._data = data;
   // Calculate extra settings
   var max_value = 1;
@@ -29,24 +23,23 @@ plots.Pyramid = function(data, options, canvas) {
     max_value = Math.max(max_value, Math.max(this._data[igroup].male, this._data[igroup].female));
     longest_label = Math.max(longest_label, this._data[igroup].group.length);
   }
+  this._settings.axis_size = this._settings.font_size * 2.0;
   this._settings.max_value = max_value;
   this._settings.label_width = this._settings.axis_size * longest_label / 2;
   this._settings.bar_height = (this._settings.height - this._settings.axis_size) / this._data.length;
-  // Create the canvas and draw the plot
-  this.canvas = canvas || document.createElement("canvas");
-  this.canvas.width = this._settings.width;
-  this.canvas.height = this._settings.height;
-  this.context = this.canvas.getContext("2d");
+
   this._draw_axis();
   this._draw_data();
 };
 
+plots.Pyramid.prototype = Object.create(plots.Plot.prototype);
+plots.Pyramid.prototype.constructor = plots.Pyramid;
 
 /// Draws the axis onto the canvas
 plots.Pyramid.prototype._draw_axis = function() {
   this.context.save();
   var font_args = this.context.font.split(' ');
-  this.context.font = this._settings.axis_size + "px " + font_args[font_args.length - 1];
+  this.context.font = this._settings.font_size + "px " + font_args[font_args.length - 1];
   this.context.strokeStyle = "Black";
   this.context.lineWidth = 2;
   // The vertical axis
@@ -64,7 +57,7 @@ plots.Pyramid.prototype._draw_axis = function() {
 
   for(var igroup = 0; igroup < this._data.length; igroup++) {
     var y = this._settings.height - this._settings.axis_size - igroup * this._settings.bar_height - this._settings.bar_height / 2;
-    this.context.fillText(this._data[igroup].group, (this._settings.width - this._settings.label_width) / 2, y);
+    this._fill_text(this._data[igroup].group, this._settings.width / 2, y, "center");
   }
 
   // The horizontal axis
@@ -78,15 +71,14 @@ plots.Pyramid.prototype._draw_axis = function() {
   this.context.lineTo(this._settings.width - this._settings.margin, this._settings.height - this._settings.axis_size);
   this.context.stroke();
   this.context.closePath();
-  this.context.fillText(this._settings.max_value, this._settings.margin,
-                        this._settings.height - this._settings.margin);
-  this.context.fillText("0", (this._settings.width - this._settings.label_width - this._settings.axis_size) / 2,
-                        this._settings.height - this._settings.margin);
-  this.context.fillText("0", (this._settings.width + this._settings.label_width) / 2,
-                        this._settings.height - this._settings.margin);
-  this.context.fillText(this._settings.max_value, this._settings.width - this._settings.max_value.toString().length * this._settings.axis_size / 2 - this._settings.margin,
-                        this._settings.height - this._settings.margin);
-
+  this._fill_text(this._settings.max_value, this._settings.margin,
+                  this._settings.height - this._settings.axis_size + this._settings.font_size);
+  this._fill_text("0", (this._settings.width - this._settings.label_width) / 2,
+                  this._settings.height - this._settings.axis_size + this._settings.font_size, "right");
+  this._fill_text("0", (this._settings.width + this._settings.label_width) / 2,
+                  this._settings.height - this._settings.axis_size + this._settings.font_size);
+  this._fill_text(this._settings.max_value, this._settings.width - this._settings.margin,
+                  this._settings.height - this._settings.axis_size + this._settings.font_size, "right");
   this.context.restore();
 };
 
