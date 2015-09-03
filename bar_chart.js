@@ -25,9 +25,6 @@ plots.BarChart = function(data, options, canvas) {
     longest_label = Math.max(longest_label, this._data[ibin].label.length);
   }
   this._settings.max_value = max_value;
-  // Resize the font until it fits
-  while(longest_label * this._settings.font_size / 2 > this._settings.bar_width)
-    this._settings.font_size -= 1.0;
   this._settings.axis_size = this._settings.font_size * 2.0;
   this._settings.bar_width = (this._settings.width - this._settings.axis_size) / this._data.length;
 
@@ -42,8 +39,6 @@ plots.BarChart.prototype.constructor = plots.BarChart;
 /// Draws the axis onto the canvas
 plots.BarChart.prototype._draw_axis = function() {
   this.context.save();
-  var font_args = this.context.font.split(' ');
-  this.context.font = this._settings.font_size + "px " + font_args[font_args.length - 1];
   this.context.strokeStyle = "Black";
   this.context.lineWidth = 2;
   // The vertical axis

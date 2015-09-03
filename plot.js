@@ -19,6 +19,7 @@ plots.Plot = function(options, canvas) {
   this.canvas.width = this._settings.width;
   this.canvas.height = this._settings.height;
   this.context = this.canvas.getContext("2d");
+  this.context.font = this._settings.font_size + "px monospace";
 };
 
 /// Fill text with a specified alignment
@@ -31,11 +32,12 @@ plots.Plot = function(options, canvas) {
 plots.Plot.prototype._fill_text = function(text, x, y, align) {
   align = align || "left";
   text = text.toString();
+  var width = this.context.measureText(text).width;
   if(align === "center") {
-    x -= text.length * this._settings.font_size / 4;
+    x -= width / 2;
   }
   else if(align === "right") {
-    x -= text.length * this._settings.font_size / 1.5;
+    x -= width;
   }
   this.context.fillText(text, x, y);
 };

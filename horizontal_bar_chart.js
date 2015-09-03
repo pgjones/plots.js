@@ -19,14 +19,14 @@ plots.HorizontalBarChart = function(data, options, canvas) {
   this._data = data;
   // Calculate extra settings
   var max_value = 1;
-  var longest_label = 1;
+  var longest_label = '';
   for(var ibin = 0; ibin < this._data.length; ibin++) {
     max_value = Math.max(max_value, this._data[ibin].value);
-    longest_label = Math.max(longest_label, this._data[ibin].label.length);
+    if(this._data[ibin].label.length > longest_label.length)
+      longest_label = this._data[ibin].label;
   }
   this._settings.max_value = max_value;
-  // Resize the font until it fits
-  this._settings.vertical_axis_size = longest_label * this._settings.font_size;
+  this._settings.vertical_axis_size = this.context.measureText(longest_label).width + 2 * this._settings.margin;
   this._settings.horizontal_axis_size = this._settings.font_size * 2.0;
   this._settings.bar_height = (this._settings.height - this._settings.horizontal_axis_size) / this._data.length;
 
@@ -41,8 +41,6 @@ plots.HorizontalBarChart.prototype.constructor = plots.HorizontalBarChart;
 /// Draws the axis onto the canvas
 plots.HorizontalBarChart.prototype._draw_axis = function() {
   this.context.save();
-  var font_args = this.context.font.split(' ');
-  this.context.font = this._settings.font_size + "px " + font_args[font_args.length - 1];
   this.context.strokeStyle = "Black";
   this.context.lineWidth = 2;
   // The vertical axis
@@ -72,7 +70,7 @@ plots.HorizontalBarChart.prototype._draw_axis = function() {
                   this._settings.vertical_axis_size + this._settings.margin,
                   this._settings.horizontal_axis_size - this._settings.margin);
   if(this._settings.x_label)
-    this._fill_text(this._settings.x_label, this._settings.horizontal_axis_size + (this._settings.width - this._settings.horizontal_axis_size) / 2,
+    this._fill_text(this._settings.x_label, this._settings.vertical_axis_size + (this._settings.width - this._settings.vertical_axis_size) / 2,
                     this._settings.font_size, "center");
   this.context.restore();
 };

@@ -38,8 +38,6 @@ plots.Pyramid.prototype.constructor = plots.Pyramid;
 /// Draws the axis onto the canvas
 plots.Pyramid.prototype._draw_axis = function() {
   this.context.save();
-  var font_args = this.context.font.split(' ');
-  this.context.font = this._settings.font_size + "px " + font_args[font_args.length - 1];
   this.context.strokeStyle = "Black";
   this.context.lineWidth = 2;
   // The vertical axis
