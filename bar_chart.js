@@ -1,7 +1,7 @@
 var plots = plots || {};
 
 
-/// Produce a histogram on a canvas DOM element.
+/// Produce a Bar Chart on a canvas DOM element.
 ///
 /// Args:
 ///  data: A list of bins in the following format (example values)
@@ -10,7 +10,7 @@ var plots = plots || {};
 ///    width: Optional plot width, defaults to 300px
 ///    height: Optional plot height, defaults to 400px
 ///    margin: Margin between any part of the plot and the edge, and within the plot
-plots.Histogram = function(data, options, canvas) {
+plots.BarChart = function(data, options, canvas) {
   plots.Plot.call(this, options, canvas);
   options = options || {};
   this._settings.color = options.color || 'red';
@@ -36,11 +36,11 @@ plots.Histogram = function(data, options, canvas) {
   this._draw_data();
 };
 
-plots.Histogram.prototype = Object.create(plots.Plot.prototype);
-plots.Histogram.prototype.constructor = plots.Histogram;
+plots.BarChart.prototype = Object.create(plots.Plot.prototype);
+plots.BarChart.prototype.constructor = plots.BarChart;
 
 /// Draws the axis onto the canvas
-plots.Histogram.prototype._draw_axis = function() {
+plots.BarChart.prototype._draw_axis = function() {
   this.context.save();
   var font_args = this.context.font.split(' ');
   this.context.font = this._settings.font_size + "px " + font_args[font_args.length - 1];
@@ -79,7 +79,7 @@ plots.Histogram.prototype._draw_axis = function() {
 };
 
 /// Draws the data onto the canvas
-plots.Histogram.prototype._draw_data = function() {
+plots.BarChart.prototype._draw_data = function() {
   this.context.save();
   var max_bar_height = this._settings.height - this._settings.axis_size - this._settings.margin;
   for(var ibin = 0; ibin < this._data.length; ibin++) {
